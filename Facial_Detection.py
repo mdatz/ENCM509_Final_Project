@@ -15,13 +15,27 @@ face_recognizer = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_m
 ##Set Threshold Value for Matches
 tolerance = 0.5
 
-##Read Face Images
-image = cv2.imread('./images/yaleB01/yaleB01_P00A+000E+00.pgm')
+##DataBase Values
+db_count = 20
+db_encodings = []
 
-##Detect Face and Face Orientation/Shape
-detected_faces = face_detector(image,1)
-shapes_faces = [shape_predictor(image,face) for face in detected_faces]
+##Read Images and Store Model Encodings into DataBase
+for i in range(1, db_count):
+    
+    ##Missing Training Sample :(
+    if i == 14:
+        continue
+        
+    file_str = "./images/yaleB%02d/yaleB%02d_P00A+000E+00.pgm" % (i,i)
+    print("Reading Image: " + file_str)
+    image = cv2.imread(file_str)
+    detected_faces = face_detector(image,1)
+    shapes_faces = [shape_predictor(image,face) for face in detected_faces]
+    
+    encoding = [numpy.array(face_recognizer.compute_face_descriptor(image, face_pose, 1)) for face_pose in shapes_faces]
+    db_encodings.append(encoding)
 
-##Determine Encoding For Given Face
-encoding = [numpy.array(face_recognizer.compute_face_descriptor(image, face_pose, 1)) for face_pose in shapes_faces]
-print(encoding)
+print("DataBase Created!")
+
+##Test a Query Image Against DataBase Encodings
+query_image = cv2.imread("./images/yaleB20/yaleB20_P00A+000E+00.pgm")
