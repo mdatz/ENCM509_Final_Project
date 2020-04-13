@@ -16,8 +16,9 @@ face_recognizer = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_m
 tolerance = 0.03
 
 ##DataBase Values & Feature Vector List
-db_count = 20
+db_count = 39
 db_encodings = []
+num_samples = 10
 
 ##Read Images and Store Model Encodings into DataBase
 for i in range(1, db_count):
@@ -25,23 +26,22 @@ for i in range(1, db_count):
     ##Missing Training Sample :(
     if i == 14:
         continue
-    
-    ##Create File String & Read Image
-    file_str = "./images/yaleB%02d/yaleB%02d (1).pgm" % (i,i)
-    print("Reading Image: " + file_str)
-    image = cv2.imread(file_str)
-    
-    ##Detect Faces/Orientation and Determine Encoding
-    detected_faces = face_detector(image,1)
-    shapes_faces = [shape_predictor(image,face) for face in detected_faces]
-    encoding = [numpy.array(face_recognizer.compute_face_descriptor(image, face_pose, 1)) for face_pose in shapes_faces]
-    
-    ##Output any failed db samples
-    if encoding == []:
-        print("Image %d Failed" % (i))
-    else:  
-        db_encodings.append(encoding)
-
+    for j in range(1,num_samples):
+		##Create File String & Read Image
+		file_str = "./images/yaleB%02d/yaleB%02d (%1d).pgm" % (i,i,j)
+		print("Reading Image: " + file_str)
+		image = cv2.imread(file_str)
+		
+		##Detect Faces/Orientation and Determine Encoding
+		detected_faces = face_detector(image,1)
+		shapes_faces = [shape_predictor(image,face) for face in detected_faces]
+		encoding = [numpy.array(face_recognizer.compute_face_descriptor(image, face_pose, 1)) for face_pose in shapes_faces]
+		
+		##Output any failed db samples
+		if encoding == []:
+			print("Image %d Failed" % (i))
+		else:  
+			db_encodings.append(encoding)
 print("DataBase Created!")
 
 ##Test a Query Image Against DataBase Encodings
