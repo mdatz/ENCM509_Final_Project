@@ -27,7 +27,7 @@ for i in range(1, db_count):
         continue
     
     ##Create File String & Read Image
-    file_str = "./images/yaleB%02d/yaleB%02d_P00A+000E+00.pgm" % (i,i)
+    file_str = "./images/yaleB%02d/yaleB%02d (1).pgm" % (i,i)
     print("Reading Image: " + file_str)
     image = cv2.imread(file_str)
     
@@ -45,7 +45,7 @@ for i in range(1, db_count):
 print("DataBase Created!")
 
 ##Test a Query Image Against DataBase Encodings
-query_image = cv2.imread("./images/yaleB03/yaleB03_P00A+000E+45.pgm")
+query_image = cv2.imread("./images/yaleB03/yaleB03 (2).pgm")
 
 ##Get Query Image Encoding
 detected_faces = face_detector(query_image,1)
