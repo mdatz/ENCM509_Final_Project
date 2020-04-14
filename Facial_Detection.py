@@ -19,7 +19,7 @@ tolerance = 0.03
 db_count = 40
 db_encodings = []
 sample_start = 1
-num_samples = 6
+num_samples = 5
 query_sample_start = 11
 query_sample_end = 16
 
@@ -31,23 +31,24 @@ for i in range(sample_start, db_count):
     if i == 14:
         db_encodings.append(user_encodings)
         continue
-        
-    for j in range(1,num_samples):
+    
+    j = 1
+    while(len(user_encodings) != num_samples):
         ##Create File String & Read Image
         file_str = "./images/yaleB%02d/yaleB%02d (%d).pgm" % (i,i,j)
         print("Reading Image: " + file_str)
         image = cv2.imread(file_str)
-		
+        image = cv2.resize(image,(150,150))
+        
         ##Detect Faces/Orientation and Determine Encoding
-        detected_faces = face_detector(image,1)
-        shapes_faces = [shape_predictor(image,face) for face in detected_faces]
-        encoding = [numpy.array(face_recognizer.compute_face_descriptor(image, face_pose, 1)) for face_pose in shapes_faces]
+        encoding = [numpy.array(face_recognizer.compute_face_descriptor(image))]
 		
         ##Output any failed db samples
         if encoding == []:
             print("Image %d Failed" % (i))
         else:  
             user_encodings.append(encoding)
+        j += 1
     db_encodings.append(user_encodings)
 print("DataBase Created!")
 
@@ -64,11 +65,10 @@ for j in range(1, db_count):
         ##Test a Query Image Against DataBase Encodings
         query_file = "./images/yaleB%02d/yaleB%02d (%d).pgm" % (j,j,k)
         query_image = cv2.imread(query_file)
+        query_image = cv2.resize(query_image(150,150))
         print("Testing image %d from user %d" % (k,j))
         ##Get Query Image Encoding
-        detected_faces = face_detector(query_image,1)
-        shapes_faces = [shape_predictor(query_image,face) for face in detected_faces]
-        query_encoding = [numpy.array(face_recognizer.compute_face_descriptor(query_image, face_pose, 1)) for face_pose in shapes_faces]
+        query_encoding = [numpy.array(face_recognizer.compute_face_descriptor(query_image))]
         if query_encoding == []:
             print("Query image failed to load")
             continue
