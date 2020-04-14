@@ -13,15 +13,15 @@ shape_predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 face_recognizer = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_model_v1.dat')
 
 ##Set Threshold Value for Matches
-tolerance = 0.03
+tolerance = 0.020 
 
 ##DataBase Values & Feature Vector List
 db_count = 40
 db_encodings = []
-sample_start = 1
+sample_start = 6                ##Fold I: 1  / Fold II: 6
 num_samples = 5
-query_sample_start = 11
-query_sample_end = 16
+query_sample_start = 1          ##Fold I: 6  / Fold II: 1
+query_sample_end = 6            ##Fold I: 11 / Fold II: 6
 
 ##Read Images and Store Model Encodings into DataBase
 for i in range(sample_start, db_count):
@@ -32,7 +32,7 @@ for i in range(sample_start, db_count):
         db_encodings.append(user_encodings)
         continue
     
-    j = 1
+    j = sample_start
     while(len(user_encodings) != num_samples):
         ##Create File String & Read Image
         file_str = "./images/yaleB%02d/yaleB%02d (%d).pgm" % (i,i,j)
