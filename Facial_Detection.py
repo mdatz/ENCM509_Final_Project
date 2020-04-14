@@ -65,7 +65,7 @@ for j in range(1, db_count):
         ##Test a Query Image Against DataBase Encodings
         query_file = "./images/yaleB%02d/yaleB%02d (%d).pgm" % (j,j,k)
         query_image = cv2.imread(query_file)
-        query_image = cv2.resize(query_image(150,150))
+        query_image = cv2.resize(query_image,(150,150))
         print("Testing image %d from user %d" % (k,j))
         ##Get Query Image Encoding
         query_encoding = [numpy.array(face_recognizer.compute_face_descriptor(query_image))]
