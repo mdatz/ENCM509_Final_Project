@@ -90,10 +90,12 @@ for j in range(1, db_count):
                     print("Possible match with DB User #%d - Score:%.3f" % ((i+1),score))
                     matched = 1
 					##checking for false accepts
-                    if i!=j:
+                    if (i+1)!=j:
                         FA_count+=1
+                        print("This is not the man, we messed up")
 			##checking for false rejects
-            if matched == 0 and i==j:
+            if matched == 0 and (i+1)==j:
+                print("Mission failed we failed to identify the man")
                 FR_count+=1
 print("Total number of false rejections: %d" %(FR_count))
 print("Total number of false acceptions: %d" %(FA_count))
