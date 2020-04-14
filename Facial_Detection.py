@@ -1,5 +1,5 @@
 ##ENCM 509 - Lab Project
-##CNN Facial Recognizer
+##CNN Facial Recognizer (Threshold Based)
 
 import cv2
 import dlib
@@ -8,23 +8,21 @@ import numpy
 import os
 
 ##Load Needed Face Detection Models
-face_detector = dlib.get_frontal_face_detector()
-shape_predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 face_recognizer = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_model_v1.dat')
 
 ##Set Threshold Value for Matches
-tolerance = 0.020 
+tolerance = 0.020
 
 ##DataBase Values & Feature Vector List
 db_count = 40
 db_encodings = []
-sample_start = 6                ##Fold I: 1  / Fold II: 6
+sample_start = 6               ##Fold I: 1  / Fold II: 6
 num_samples = 5
 query_sample_start = 1          ##Fold I: 6  / Fold II: 1
 query_sample_end = 6            ##Fold I: 11 / Fold II: 6
 
 ##Read Images and Store Model Encodings into DataBase
-for i in range(sample_start, db_count):
+for i in range(1, db_count):
     user_encodings = []
     
     ##Missing Training Sample :(
@@ -77,7 +75,7 @@ for j in range(1, db_count):
         for i in range(len(db_encodings)):
             if i == 14:
                 continue
-            matched = 0
+
 		    #for every entry from that user
             for q in range(len(db_encodings[i])):
     
@@ -88,15 +86,16 @@ for j in range(1, db_count):
         
                 if score <= tolerance:
                     print("Possible match with DB User #%d - Score:%.3f" % ((i+1),score))
-                    matched = 1
+
 					##checking for false accepts
                     if (i+1)!=j:
                         FA_count+=1
                         print("This is not the man, we messed up")
-			##checking for false rejects
-            if matched == 0 and (i+1)==j:
-                print("Mission failed we failed to identify the man")
-                FR_count+=1
+                ##checking for false rejects
+                else:
+                    if(i+1)==j:
+                        print("Mission failed we failed to identify the man")
+                        FR_count+=1
 print("Total number of false rejections: %d" %(FR_count))
 print("Total number of false acceptions: %d" %(FA_count))
 print("FRR: %.4f" %(FR_count/num_tests))
